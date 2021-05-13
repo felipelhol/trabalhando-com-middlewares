@@ -10,11 +10,31 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
-}
+  const {username} = request.headers;
 
+  const user = users.find(user => user.username ===username);
+
+  if(!user) {
+    return response.status(404).json({error: 'Mensagem do erro'});
+  }
+  request.user = user;
+  return next();
+
+}
+// ainda estiver no plano grátis e ainda não possuir 10 todos cadastrados ou se ele já estiver com o plano Pro ativado.
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const {user} = request;
+
+  if(user.pro === false){
+    if(users.todos.length < 10) return next()
+    else return response.status(404).json({error: "You have reached the limit of 10 todos, for unlimited todos please puchase Pro version"});
+  }  //user => user.pro === false &&user => user.pro === false &&
+  //const existsAvailability = user.find(user => user.pro === true)
+  else return next();
+  
+  
+
+
 }
 
 function checksTodoExists(request, response, next) {
